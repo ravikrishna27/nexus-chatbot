@@ -1,4 +1,4 @@
-# Nexus AI (formerly DOTLOGGER)
+# Nexus AI 
 
 A secure, high-performance, full-stack AI chatbot application built with the MERN Stack (MongoDB, Express, React, Node.js) and powered by the **Google Gemini API (Gemini 2.5 Flash)**.
 
