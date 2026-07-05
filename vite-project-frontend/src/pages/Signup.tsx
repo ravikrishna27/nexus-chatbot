@@ -12,34 +12,32 @@ const Signup = () => {
     const email = formData.get("email") as string//find based on the name
     const password = formData.get("password") as string
     try{
-        toast.loading("Signing in...",{id: "signup"})
+        toast.loading("Signing up...",{id: "signup"})
         await auth?.signup(name, email, password)
-        toast.success("Successfully Signed up...",{id: "signup"})
+        toast.success("Successfully Signed up!",{id: "signup"})
     }
     catch(error){
       console.log(error)
-        toast.error("Failed to SignIn!", {id:"login"})
+        toast.error("Failed to Sign Up!", {id:"signup"})
     }
   }
   return (
     <Box width={"100%"} height={"100%"} display="flex" flex={1}>
-      <Box padding={8} mt={8} display={{md:"flex", sm: "none", xs:"none"}}>
-
-      </Box>
       <Box display={"flex"} 
-      flex={{xs: 1, md:0.5}}
+      flex={1}
       justifyContent={"center"}
-      padding={2}
-      ml={"auto"}
-      mt={16}>
+      alignItems={"center"}
+      padding={2}>
         <form 
         onSubmit={handleSubmit}
         style={{
           margin:'auto',
-          padding:'30px',
-          boxShadow:"2px 2px 10px #000",
-          borderRadius:"10px",
-          border: "none",
+          padding:'40px',
+          background: "#111",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          borderRadius:"12px",
+          width: "100%",
+          maxWidth: "400px"
         }}>
           <Box sx={{display:"flex",
            flexDirection:"column",
@@ -48,24 +46,29 @@ const Signup = () => {
               <Typography variant="h4" 
               textAlign="center"
                padding={2} 
-               fontWeight={600}>
-                Sign Up
+               fontWeight={600}
+               sx={{ mb: 2, color: "white" }}>
+                Create Account
                </Typography>
-               <CustomizedInput type="name" name="name" label="name"/>
+               <CustomizedInput type="name" name="name" label="Name"/>
                <CustomizedInput type="email" name="email" label="Email"/>
                <CustomizedInput type="password" name="password" label="Password"/>
-               <Button type="submit" sx={{px:2,
-                 py:1, 
-                 mt:2, 
-                 width:"400px", 
-                 borderRadius:2,
-                 bgcolor:"#5aa17f",
+               <Button type="submit" sx={{
+                 px:2,
+                 py:1.5, 
+                 mt:4, 
+                 width:"100%", 
+                 borderRadius:"6px",
+                 background: "white",
+                 color: "black",
+                 fontWeight: 500,
+                 fontSize: "16px",
+                 textTransform: "none",
                  ":hover":{
-                    bgcolor:"white",
-                    color:"black"
+                    background: "#e5e5e5",
                  }}}
                  endIcon={<RiLoginBoxLine color='black'/>}>
-                  
+                  Sign Up
                </Button>
             </Box>
         </form>

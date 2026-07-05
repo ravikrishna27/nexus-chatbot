@@ -1,10 +1,12 @@
-import {Box, Avatar, Typography, Button, IconButton} from "@mui/material"
+import { Box, Typography, Button, IconButton } from "@mui/material"
 import { useAuth } from "../context/AuthContext"
 import ChatItem from "../components/Chats/ChatItem"
 import { IoMdSend } from "react-icons/io"
+import { MdDeleteOutline } from "react-icons/md"
 import { useRef, useState } from "react"
 import { delChatReq, sendChatReq } from "../helpers/ApiCom"
 import toast from "react-hot-toast"
+
 const Chat = () => {
 
   type message = {
@@ -13,103 +15,139 @@ const Chat = () => {
   }
 
   const auth = useAuth()
-  const fName = auth?.user?.name.split(" ")[0]
-  const sName = auth?.user?.name.split(" ")[1]
   const [chatHistory, setChatHistory] = useState<message[]>([])
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
-const inputRef = useRef<HTMLInputElement | null > (null)
-
-const handleSubmit = async() =>{
+  const handleSubmit = async () => {
     const content = inputRef.current?.value as string
-    if(inputRef && inputRef.current ){
-      inputRef.current.value=""
+    if (inputRef && inputRef.current) {
+      inputRef.current.value = ""
     }
-    const newMessage:message = {role:'user', content:content}
-    setChatHistory((prev)=>{
-          return ([...prev, newMessage])
-    })
+    if (!content.trim()) return;
+
+    const newMessage: message = { role: 'user', content: content }
+    setChatHistory((prev) => [...prev, newMessage])
+    
     const chatData = await sendChatReq(content)
     setChatHistory([...chatData.chats])
-}
+  }
 
-const handleClear = async()=>{
-  try{
-    toast.loading("Deleting chats", {id: "deleteChats"})
-    await delChatReq()
-    setChatHistory([])
-    toast.success("Deleted chats successfully", {id: "deleteChats"})
+  const handleClear = async () => {
+    try {
+      toast.loading("Clearing conversation...", { id: "deleteChats" })
+      await delChatReq()
+      setChatHistory([])
+      toast.success("Conversation cleared", { id: "deleteChats" })
+    }
+    catch (error) {
+      toast.error("Failed to clear conversation", { id: "deleteChats" })
+    }
   }
-  catch(error){
-    toast.error("Failed to Delete Chats", {id:"deleteChats"})
-  }
-}
 
   return (
     <Box sx={{
-      display:"flex",
-       flex:1,
-      width:"100%",
-      height:"100%",
-       mt:3,
-      gap:3 }}>
-          <Box sx={{display:{md:"flex",sm:"none", xs:"none"}, flex:0.2, flexDirection:"column"}}>
-            <Box sx ={{display:"flex", flexDirection:'column', width:"100%", height:"60vh", bgcolor:"rgb(17, 29, 39)", borderRadius:5, mx:3}}>
-                <Avatar sx={{mx:"auto", my:2, bgcolor:'white', color:'black', fontWeight:700}}>
-                      {fName?.[0]}{sName?.[0]}
-                </Avatar>
-                <Typography sx={{mx:"auto", fontFamily:'Ubuntu', my:4, p:3}}>
-                      Enter your query in the space below
-                </Typography>
-                <Button onClick={handleClear}
-                sx={{width:"200px",
-                my:'auto',
-                color:'white',
-                fontWeight:"700", 
-                borderRadius: 3, 
-                mx:"auto", 
-                bgcolor:"#333146",
-                ":hover":{
-                  bgcolor:"#b84747"
-                }}}>
-                        CLEAR CONVERSATION
-                </Button>
+      display: "flex",
+      flex: 1,
+      width: "100%",
+      height: "calc(100vh - 80px)",
+      justifyContent: "center",
+      alignItems: "center",
+      pt: 2
+    }}>
+      <Box sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: { md: "60%", xs: "100%", sm: "90%" },
+        height: "95%",
+        px: 3,
+        position: "relative"
+      }}>
+        
+        {/* Header Area */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography sx={{ 
+            fontSize: "24px", 
+            fontWeight: 600,
+            color: "white"
+          }}>
+            Nexus AI
+          </Typography>
+          <Button 
+            onClick={handleClear}
+            startIcon={<MdDeleteOutline />}
+            sx={{
+              color: '#a1a1aa',
+              textTransform: 'none',
+              ':hover': { color: '#ff4d4d', bgcolor: 'rgba(255,0,0,0.05)' }
+            }}
+          >
+            Clear Chat
+          </Button>
+        </Box>
+
+        {/* Chat History Container */}
+        <Box sx={{
+          width: "100%",
+          flex: 1,
+          borderRadius: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          scrollBehavior: 'smooth',
+          px: 2,
+          pb: 2
+        }}>
+          {chatHistory.length === 0 && (
+            <Box sx={{ m: 'auto', textAlign: 'center', opacity: 0.5 }}>
+              <Typography variant="h5" sx={{ color: "#a1a1aa" }}>How can I help you today, {auth?.user?.name.split(" ")[0]}?</Typography>
             </Box>
-          </Box>
-          <Box sx={{display:"flex", flex:{md:0.8, xs:1, sm:1}, flexDirection:"column", px:3}}>
-            <Typography sx={{textAlign:'center', fontSize:"40px", color:'white', mb:2, mx:"auto" }}>
-                  Model - GPT 3.5 Turbo
-            </Typography>
-                <Box sx={{ width: "100%", 
-                height: "60vh", 
-                borderRadius:3, mx:"auto", 
-                disply:'flex', 
-                flexDirection:'column', 
-                overflow:'scroll',
-                overflowX:'hidden',
-                overflowY:'auto',
-                scrollBehavior:'smooth'}}>
-                  {chatHistory.map((chat, index)=>{
-                        return <ChatItem content={chat.content} role={chat.role} key={index}/>
-                  })}
-                </Box>
-                <Box sx={{display:"flex", width:"100%",mr:"auto", mt:"7px", bgcolor:"#36485e", borderRadius:2}}>
-                <input type='text'
-                ref={inputRef}
-                style={{
-                  width:"100%",
-                  backgroundColor: "transparent",
-                  padding:"10px",
-                  border:"none",
-                  outline:"none",
-                  color:"white",
-                  fontSize:"20px"
-                }}>
-                </input>
-                <IconButton onClick={handleSubmit} sx={{ml:"auto", color:'white'}}>
-                  <IoMdSend/>
-                </IconButton>
-                </Box>
-          </Box>
+          )}
+          {chatHistory.map((chat, index) => {
+            return <ChatItem content={chat.content} role={chat.role} key={index} />
+          })}
+        </Box>
+
+        {/* Input Area */}
+        <Box sx={{
+          display: "flex",
+          width: "100%",
+          mt: 2,
+          mb: 2,
+          p: "4px 12px",
+          background: "#111",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          borderRadius: "8px",
+          alignItems: "center",
+        }}>
+          <input 
+            type='text'
+            ref={inputRef}
+            placeholder="Send a message..."
+            onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
+            style={{
+              flex: 1,
+              backgroundColor: "transparent",
+              padding: "14px",
+              border: "none",
+              outline: "none",
+              color: "white",
+              fontSize: "15px",
+              fontFamily: "Outfit"
+            }}
+          />
+          <IconButton onClick={handleSubmit} sx={{
+            color: 'black',
+            background: "white",
+            p: 1,
+            borderRadius: "6px",
+            ':hover': { background: "#e5e5e5" }
+          }}>
+            <IoMdSend size={18} />
+          </IconButton>
+        </Box>
+
+      </Box>
     </Box>
   )
 }

@@ -1,27 +1,33 @@
 import { Link } from 'react-router-dom'
 import { Typography, Box } from '@mui/material'
-import DataUsageIcon from '@mui/icons-material/DataUsage';
+import BlurOnIcon from '@mui/icons-material/BlurOn';
+
 const Logo = () => {
   return (
     <div style={{
         display:"flex",
         marginRight:"auto",
         alignItems:"center",
-        gap:"15px"
+        gap:"10px"
     }}>
-        <Link to={"/"}>
+        <Link to={"/"} style={{ textDecoration: 'none' }}>
             <Box sx={{display:'flex', alignItems:'center'}}>
-            <DataUsageIcon></DataUsageIcon>
+            <BlurOnIcon sx={{ fontSize: 32, color: "#00C9FF" }} />
             <Typography sx={{
-            display:{md:"block", sm:"none", xs:"none"},
-             mr:"auto",
-             pl:'5px',
-            fontWeight:"700",
-            textShadow: "2px 2px 20px #000" }}>
-                <span style={{fontSize:"20px"}}>DOT</span>-LOGGER
+             ml: 1,
+             display:{md:"block", sm:"none", xs:"none"},
+             fontWeight:"800",
+             fontSize:"24px",
+             letterSpacing: "1px",
+             background: "linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%)",
+             WebkitBackgroundClip: "text",
+             WebkitTextFillColor: "transparent",
+             textShadow: "0px 0px 20px rgba(0, 201, 255, 0.4)"
+            }}>
+                NEXUS
             </Typography>
             </Box>
-          </Link>{" "}
+        </Link>
     </div>
   )
 }

@@ -1,30 +1,57 @@
-import { Box, Avatar, Typography} from "@mui/material"
+import { Box, Avatar, Typography } from "@mui/material"
 import { useAuth } from "../../context/AuthContext"
+import ReactMarkdown from "react-markdown"
 
 export const ChatItem = ({content, role}:{content:string, role: "user" | "assistant"}) => {
     const auth = useAuth()
-  return role === "assistant" ? (<Box sx={{display:"flex", p:2, bgcolor:'#333146', my:2, gap:2, borderRadius:2}}>
-    <Avatar sx={{ml:"0"}}>
-            <img src="" alt="" width={"30px"}/>
-    </Avatar>
-    <Box>
-        <Typography sx={{color:"white", fontSize:"20px"}}>
-            {content}
-        </Typography>
-    </Box>
-  </Box>
-) : (
-<Box sx={{display:"flex", p:2, bgcolor:'#333146', my:2, gap:2, borderRadius:2}}>
-    <Avatar sx={{ml:"0", bgcolor:"black", color:"white"}}>
-            {auth?.user?.name[0]}
-    </Avatar>
-    <Box>
-        <Typography sx={{color:"white", fontSize:"20px"}}>
-            {content}
-        </Typography>
-    </Box>
-  </Box>
-)
+    const isAssistant = role === "assistant";
+
+    return (
+        <Box sx={{
+            display: "flex",
+            justifyContent: isAssistant ? "flex-start" : "flex-end",
+            my: 2,
+            gap: 2,
+            width: "100%"
+        }} className="chat-message-animated">
+            
+            {/* Assistant Avatar on the left */}
+            {isAssistant && (
+                <Avatar sx={{ bgcolor: 'transparent', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    🤖
+                </Avatar>
+            )}
+
+            {/* Chat Bubble */}
+            <Box sx={{
+                maxWidth: "75%",
+                p: 2,
+                borderRadius: isAssistant ? "12px 12px 12px 2px" : "12px 12px 2px 12px",
+                background: isAssistant 
+                    ? "#111"
+                    : "#ededed",
+                border: "1px solid rgba(255, 255, 255, 0.08)"
+            }}>
+                {isAssistant ? (
+                    <Box className="markdown-body" sx={{ color: "white", fontSize: "15px" }}>
+                        <ReactMarkdown>{content}</ReactMarkdown>
+                    </Box>
+                ) : (
+                    <Typography sx={{ color: "black", fontSize: "15px", lineHeight: 1.5, fontWeight: 500 }}>
+                        {content}
+                    </Typography>
+                )}
+            </Box>
+
+            {/* User Avatar on the right */}
+            {!isAssistant && (
+                <Avatar sx={{ bgcolor: "white", color: "black", fontWeight: 600 }}>
+                    {auth?.user?.name[0]?.toUpperCase()}
+                </Avatar>
+            )}
+            
+        </Box>
+    )
 }
 
 export default ChatItem

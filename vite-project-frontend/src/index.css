@@ -1,50 +1,95 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
-
-
-
-html, body{
+/* Global Reset & Base */
+html, body {
   margin: 0;
   padding: 0;
-  background: #29252c; 
-  color: #ffffffdc;
-  font-family: "Ubuntu", sans-serif;
+  color: #ededed;
+  font-family: 'Outfit', sans-serif;
   font-weight: 400;
-  font-style: normal;
-}
-	
-.second-color { 
-	background: #36485e; 
+  background: #0a0a0a;
+  min-height: 100vh;
 }
 
-.third-color { 
-	background: #333146; 
-}
-
-.image-inverted{
-  filter: invert(100%)
+.image-inverted {
+  filter: invert(100%);
 }
 
 .navlink {
-  font-weight: 600;
-  margin-left:10px;
-  margin-right:10px;
-  padding: 8px 20px;
-  border-radius:10px;
-  letter-spacing:1px;
+  font-weight: 500;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  font-size: 14px;
 }
 
-.css-1t305c5-MuiFormLabel-root-MuiInputLabel-root{
-  width:100px;
-  border:50px;
+.navlink:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
-.MuiInputBase-root-MuiFilledInput-root.Mui-focused{
-  color:white !important;
+.MuiInputBase-root-MuiFilledInput-root.Mui-focused {
+  color: white !important;
 }
 
-
-
-.MuiButtonBase-root-MuiButton-root{
-  font-family: "Ubuntu", "sans-serif";
+.MuiButtonBase-root-MuiButton-root {
+  font-family: "Outfit", sans-serif;
 }
 
+/* Animations */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-message-animated {
+  animation: fadeInSlideUp 0.3s ease-out forwards;
+}
+
+/* Markdown Styles */
+.markdown-body {
+  font-family: "Outfit", sans-serif;
+  line-height: 1.6;
+}
+.markdown-body p { margin-top: 0; margin-bottom: 0.8rem; }
+.markdown-body p:last-child { margin-bottom: 0; }
+.markdown-body pre {
+  background: #111;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+}
+.markdown-body code {
+  background: #1a1a1a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+}
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1); 
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2); 
+}
